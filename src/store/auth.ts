@@ -26,7 +26,6 @@ const useAuthStore = defineStore("auth", {
                 sessionStorage.setItem("menu", JSON.stringify(menulist))
                 router.push('/')
             } catch (error) {
-                console.log(error);
             }
         }
     }

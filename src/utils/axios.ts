@@ -21,8 +21,16 @@ service.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 
 // 相应拦截器
 service.interceptors.response.use((response: AxiosResponse) => {
+    console.log(response.data)
+    if (response.data.code != 200) {
+        ElNotification({
+            title: "Error",
+            message: response.data.message,
+            type: "error"
+        })
+    }
     return response.data
-}, (error: AxiosError) => {
+}, (error: AxiosError) => {  // 这里的error是与服务器物理层面的断联, 服务器没有返回任何数据
     ElNotification({
         title: "Error",
         message: error.message,
