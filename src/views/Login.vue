@@ -55,9 +55,10 @@
     const router = useRouter()  // 组合式函数只能在*.vue组件中使用
 
     const handleLogin = () => {
-        formRef.value?.validate((valid: boolean) => { // ?.可选链操作符(ES6) obj? obj.name:"" <==> obj?.name
+        formRef.value?.validate(async (valid: boolean) => { // ?.可选链操作符(ES6) obj? obj.name:"" <==> obj?.name
             if (valid) { // 这里只是格式校验
-                authStore.login(ruleForm, router) // 通过传参的方式将组合式函数传给pinia
+                await authStore.login(ruleForm)  // 阻塞, 登录有网络延迟，可能导致跳转在登录完成前执行
+                router.push('/')
             }
         })
     }
