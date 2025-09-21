@@ -5,25 +5,58 @@
                 <img :src="logo" alt="" width="70px" height="70px">
                 <h1 class="ml">动力港能源管理平台</h1>
             </div>
-            <el-form>
-                <el-form-item>
+            <el-form ref="formRef" :model="ruleForm" :rules="rules">
+                <el-form-item prop="username">
                     <!-- 全局注册的图标组件，不用加prefix前不要加: -->
-                    <el-input placeholder="请输入用户名" prefix-icon="User"></el-input>
+                    <el-input v-model="ruleForm.username" placeholder="请输入用户名" prefix-icon="User"></el-input>
+                </el-form-item>
+                <el-form-item prop="password">
+                    <el-input v-model="ruleForm.password" placeholder="请输入密码" prefix-icon="Lock"
+                        type="password"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-input placeholder="请输入密码" prefix-icon="Lock"></el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" style="width: 100%;">登录</el-button>
+                    <el-button type="primary" style="width: 100%;" @click="handleLogin">登录</el-button>
                 </el-form-item>
             </el-form>
         </div>
     </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
     import logo from "@/assets/logo.png"
+    import type { FormInstance, FormRules } from "element-plus";
+    import { reactive, ref } from "vue";
 
+    interface RuleForm {
+        username: string,
+        password: string
+    }
+
+    const ruleForm: RuleForm = reactive({
+        username: "",
+        password: ""
+    })
+
+    const rules = reactive<FormRules<RuleForm>>({
+        username: [
+            { required: true, message: "用户名不能为空", trigger: "blur" },
+            { min: 4, max: 8, message: "用户名要求4-8位数字字母组合", trigger: "blur" }
+        ],
+        password: [
+            { required: true, message: "密码不能为空", trigger: "blur" },
+            // { pattern: /^\d{6}$/, message: "密码必须是6位纯数字", trigger: "blur" }
+        ],
+    })
+
+    const formRef = ref<FormInstance>()
+
+    const handleLogin = () => {
+        formRef.value?.validate((valid: boolean) => { // ?.可选链操作符(ES6) obj? obj.name:"" <==> obj?.name
+            if(valid) {
+                
+            }
+        })
+    }
 
 </script>
 
