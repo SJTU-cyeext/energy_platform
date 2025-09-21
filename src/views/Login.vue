@@ -24,6 +24,7 @@
 
 <script lang="ts" setup>
     import logo from "@/assets/logo.png"
+    import useAuthStore from "@/store/auth";
     import type { FormInstance, FormRules } from "element-plus";
     import { reactive, ref } from "vue";
 
@@ -49,11 +50,12 @@
     })
 
     const formRef = ref<FormInstance>()
+    const authStore = useAuthStore()
 
     const handleLogin = () => {
         formRef.value?.validate((valid: boolean) => { // ?.可选链操作符(ES6) obj? obj.name:"" <==> obj?.name
-            if(valid) {
-                
+            if (valid) {
+                authStore.login(ruleForm)
             }
         })
     }

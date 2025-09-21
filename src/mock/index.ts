@@ -175,8 +175,8 @@ Mock.mock("https://www.demo.com/login", "post", (options: any) => {
                 user: {
                     username: "cyeext",
                     roles: ["admin"],
-                    menulist
-                }
+                },
+                menulist
             }
         }
     } else if (username === "user" && password === "user666") {
@@ -188,8 +188,8 @@ Mock.mock("https://www.demo.com/login", "post", (options: any) => {
                 user: {
                     username: "mty",
                     roles: ["user"],
-                    menulist: menulist2
-                }
+                },
+                menulist: menulist2
             }
         }
     } else {
