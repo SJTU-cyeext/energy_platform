@@ -27,6 +27,7 @@
     import useAuthStore from "@/store/auth";
     import type { FormInstance, FormRules } from "element-plus";
     import { reactive, ref } from "vue";
+    import { useRouter } from "vue-router";
 
     interface RuleForm {
         username: string,
@@ -51,11 +52,12 @@
 
     const formRef = ref<FormInstance>()
     const authStore = useAuthStore()
+    const router = useRouter()  // 组合式函数只能在*.vue组件中使用
 
     const handleLogin = () => {
         formRef.value?.validate((valid: boolean) => { // ?.可选链操作符(ES6) obj? obj.name:"" <==> obj?.name
-            if (valid) {
-                authStore.login(ruleForm)
+            if (valid) { // 这里只是格式校验
+                authStore.login(ruleForm, router) // 通过传参的方式将组合式函数传给pinia
             }
         })
     }
