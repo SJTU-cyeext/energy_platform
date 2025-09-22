@@ -8,6 +8,7 @@
                 <TopHeader></TopHeader>
             </el-header>
             <el-main>
+                <TabsLayout></TabsLayout>
                 <RouterView></RouterView>
             </el-main>
         </el-container>
@@ -16,6 +17,7 @@
 <script setup lang="ts">
     import Menu from '@/components/navMenu/Menu.vue';
     import TopHeader from '@/components/topHeader/TopHeader.vue';
+    import TabsLayout from '@/layouts/TabsLayout.vue';
 </script>
 
 <style lang="less" scoped>
