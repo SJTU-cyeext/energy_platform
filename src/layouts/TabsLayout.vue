@@ -1,5 +1,6 @@
 <template>
-    <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick" type="card" closable @tab-remove="remove">
+    <el-tabs v-model="currentTab.name" class="demo-tabs" @tab-click="handleClick" type="card" closable
+        @tab-remove="remove">
         <el-tab-pane v-for="tab in tabs" :key="tab.name" :label="tab.name" :name="tab.name">
             <template #label>
                 <span class="custom-tabs-label">
@@ -15,20 +16,23 @@
 </template>
 
 <script setup lang="ts">
-    import { ref } from 'vue';
-    import type { TabsPaneContext, TabPaneName } from 'element-plus'
+    import type { TabPaneName } from 'element-plus'
     import { useTabStore } from '@/store/tabs';
     import { storeToRefs } from 'pinia';
+    import { useRouter } from 'vue-router'
 
     const tabStore = useTabStore()
-    const { tabs } = storeToRefs(tabStore)
-    const { addTab } = tabStore
-    console.log(tabs.value)
+    const router = useRouter()
+    const { tabs, currentTab } = storeToRefs(tabStore)
+    const { setCurrentTab } = tabStore
 
-    const activeName = ref('first')
-
-    const handleClick = (tab: TabsPaneContext, event: Event) => {
-        console.log(tab, event)
+    const handleClick = ({ index }: { index: number }) => {
+        const tab = tabs?.value[index]
+        if (!tab) {
+            return
+        }
+        router.push(tab.url)
+        setCurrentTab(tab.name, tab.url)  // 设置当前高亮
     }
 
     const remove = (name: TabPaneName) => {

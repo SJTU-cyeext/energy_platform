@@ -23,7 +23,6 @@
     import type { MenuItem as MenuItemType } from '@/types/auth'
     import type { PropType } from 'vue'
     import { useTabStore } from '@/store/tabs.ts'
-    import { storeToRefs } from 'pinia';
 
     export default defineComponent({
         name: "myMenu", // 组件递归调用自己时必须有name作为唯一标识
@@ -35,10 +34,10 @@
         },
         setup() {
             const tabStore = useTabStore()
-            const { tabs } = storeToRefs(tabStore)
-            const { addTab } = tabStore
+            const { addTab, setCurrentTab } = tabStore
             const add = (name: string, url: string, icon: string) => {
                 addTab(name, url, icon)
+                setCurrentTab(name, url)
             }
             return { add }
         }
