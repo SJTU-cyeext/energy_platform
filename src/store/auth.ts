@@ -26,6 +26,13 @@ const useAuthStore = defineStore("auth", {
                 sessionStorage.setItem("menu", JSON.stringify(menulist))
             } catch (error) {
             }
+        },
+        logout() {
+            this.token = ''
+            this.roles = []
+            this.username = ''
+            this.menu = []
+            sessionStorage.clear()
         }
     }
 })
