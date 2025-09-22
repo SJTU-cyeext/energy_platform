@@ -29,7 +29,7 @@ const menulist = [
             },
             {
                 name: "充电桩管理",
-                url: "/chargingstation/fault",
+                url: "/chargingstation/management",
                 icon: "Warning"
             }
         ]
@@ -68,12 +68,12 @@ const menulist = [
     },
     {
         name: "会员卡管理",
-        url: "/equipment",
+        url: "/vip",
         icon: "Magnet"
     },
     {
         name: "招商管理",
-        url: "/document",
+        url: "/investment",
         icon: "Document"
     },
     {
