@@ -9,7 +9,6 @@
             </el-header>
             <el-main>
                 <TabsLayout></TabsLayout>
-                <RouterView></RouterView>
             </el-main>
         </el-container>
     </el-container>

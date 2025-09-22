@@ -10,7 +10,7 @@
         <my-menu v-for="child in item.children" :key="child.url" :item="child"></my-menu>
     </el-sub-menu>
     <!-- 订单详情不应该在侧边栏菜单中显示 -->
-    <el-menu-item v-else :index="item.url" v-show="!(item.name == '订单详情')">
+    <el-menu-item v-else :index="item.url" v-show="!(item.name == '订单详情')" @click="add(item.name, item.url, item.icon)">
         <el-icon>
             <component :is="item.icon"></component>
         </el-icon>
@@ -22,6 +22,8 @@
     import { defineComponent } from 'vue';
     import type { MenuItem as MenuItemType } from '@/types/auth'
     import type { PropType } from 'vue'
+    import { useTabStore } from '@/store/tabs.ts'
+    import { storeToRefs } from 'pinia';
 
     export default defineComponent({
         name: "myMenu", // 组件递归调用自己时必须有name作为唯一标识
@@ -30,6 +32,15 @@
                 type: Object as PropType<MenuItemType>,  // 参考官方文档/TS与组合式API/为组件的props标注类型
                 required: true
             }
+        },
+        setup() {
+            const tabStore = useTabStore()
+            const { tabs } = storeToRefs(tabStore)
+            const { addTab } = tabStore
+            const add = (name: string, url: string, icon: string) => {
+                addTab(name, url, icon)
+            }
+            return { add }
         }
     })
 </script>
