@@ -113,7 +113,7 @@ const menulist2 = [
             },
             {
                 name: "充电桩管理",
-                url: "/chargingstation/fault",
+                url: "/chargingstation/management",
                 icon: "Warning"
             }
         ]
@@ -152,7 +152,7 @@ const menulist2 = [
     },
     {
         name: "会员卡管理",
-        url: "/equipment",
+        url: "/vip",
         icon: "Magnet"
     },
     {

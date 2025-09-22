@@ -60,12 +60,18 @@ const routes: RouteRecordRaw[] = [
             {
                 path: 'investment',
                 name: 'investment',
-                component: () => import('@/views/investment/Investment.vue')
+                component: () => import('@/views/investment/Investment.vue'),
+                meta: {
+                    needAuth: ['admin', 'manager']
+                }
             },
             {
                 path: 'system',
                 name: 'system',
-                component: () => import('@/views/system/System.vue')
+                component: () => import('@/views/system/System.vue'),
+                meta: {
+                    needAuth: ['admin']
+                }
             },
             {
                 path: 'personal',
