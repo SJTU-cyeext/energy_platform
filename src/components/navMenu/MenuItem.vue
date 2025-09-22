@@ -2,7 +2,8 @@
     <el-sub-menu v-if="item.children" :index="item.url">
         <template #title>
             <el-icon>
-                <location />
+                <!-- 根据图标组件的名称动态渲染图标组件 -->
+                <component :is="item.icon"></component>
             </el-icon>
             <span>{{ item.name }}</span>
         </template>
@@ -10,7 +11,7 @@
     </el-sub-menu>
     <el-menu-item v-else :index="item.url">
         <el-icon>
-            <document />
+            <component :is="item.icon"></component>
         </el-icon>
         <span>{{ item.name }}</span>
     </el-menu-item>
@@ -31,3 +32,26 @@
         }
     })
 </script>
+
+<style lang="less" scoped>
+    .is-active {
+        background-color: rgb(34, 136, 255);
+        color: white !important;
+
+        div {
+            span {
+                color: white
+            }
+        }
+    }
+
+    .el-menu-item:hover {
+        background-color: rgb(34, 136, 255) !important;
+        color: white !important;
+    }
+
+    ::v-deep .el-sub-menu__title:hover {
+        background-color: rgb(34, 136, 255) !important;
+        color: white !important;
+    }
+</style>
