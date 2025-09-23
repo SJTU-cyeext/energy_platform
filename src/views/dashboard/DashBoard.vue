@@ -183,7 +183,7 @@
     onMounted(() => {
 
         // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(chartRef.value);
+        const myChart = echarts.init(chartRef.value);
         // 绘制图表
         myChart.setOption({
             xAxis: {
@@ -201,6 +201,11 @@
                 }
             ]
         });
+        const resizeChart = () => {
+            myChart.resize()
+        }
+
+        window.addEventListener("resize", resizeChart)
     })
 
 </script>
@@ -229,7 +234,7 @@
                 font-size: 36px;
             }
 
-            ::v-deep .el-statistic__content {
+            :deep(.el-statistic__content) {
                 margin-top: 10px;
                 margin-bottom: 10px;
             }
