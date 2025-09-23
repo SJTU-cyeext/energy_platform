@@ -80,7 +80,7 @@
                                 <template #title>
                                     <div style="display: inline-flex; align-items: center">
                                         异常设备
-                                        <el-tooltip effect="dark" content="当前有9台设备异常，请尽快处理" placement="top">
+                                        <el-tooltip effect="dark" content="当前有47台设备异常，请尽快处理" placement="top">
                                             <el-icon style="margin-left: 4px" :size="12">
                                                 <Warning />
                                             </el-icon>
@@ -103,6 +103,7 @@
                     </div>
                 </div>
             </el-card>
+
             <el-card class="mt">
                 <template #header>
                     <div class="card-header">
@@ -139,6 +140,22 @@
                     </el-row>
                 </div>
             </el-card>
+
+            <el-card class="mt">
+                <template #header>
+                    <div class="card-header">
+                        <span>能源统计</span>
+                    </div>
+                </template>
+                <el-row>
+                    <el-col :span="6">
+                        <div ref="chartRef2" style="width: 100%; height: 400px;"></div>
+                    </el-col>
+                    <el-col :span="18">
+                        <div ref="chartRef" style="width: 100%; height: 400px;"></div>
+                    </el-col>
+                </el-row>
+            </el-card>
         </el-col>
         <el-col :span="6"></el-col>
     </el-row>
@@ -156,6 +173,34 @@
     import money from "@/assets/money.png"
     import daily from "@/assets/daily.png"
     import { CaretBottom } from '@element-plus/icons-vue';
+
+    import * as echarts from 'echarts';
+    import { ref, onMounted } from 'vue'
+
+    const chartRef = ref(null)
+    const chartRef2 = ref(null)
+
+    onMounted(() => {
+
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(chartRef.value);
+        // 绘制图表
+        myChart.setOption({
+            xAxis: {
+                type: 'category',
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [
+                {
+                    data: [150, 230, 224, 218, 135, 147, 260],
+                    type: 'line'
+                }
+            ]
+        });
+    })
 
 </script>
 
