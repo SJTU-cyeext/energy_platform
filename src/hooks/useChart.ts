@@ -2,15 +2,16 @@ import type { Ref } from "vue"
 import { onBeforeUnmount, onMounted, ref, markRaw } from 'vue'
 import * as echarts from 'echarts'
 
-const useChart = (chartRef: Ref<HTMLElement | null>, initialOptions: any) => {
+const useChart = (chartRef: Ref<HTMLElement | null>, setChartData: any) => {
     const chartInstance = ref<echarts.ECharts | null>(null)
-    const chartOptions = ref(initialOptions)
 
-    const initChart = () => {
+    const initChart = async () => {
         if (chartRef.value) {
             // Vue的响应式与echarts自带响应式冲突，取消Vue的响应式，否则resize窗口的时候会报错
             chartInstance.value = markRaw(echarts.init(chartRef.value))
-            chartInstance.value.setOption(chartOptions.value)
+            const options = await setChartData()
+            console.log("options", options)
+            chartInstance.value.setOption(options)
         }
     }
 

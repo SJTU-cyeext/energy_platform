@@ -174,102 +174,94 @@
     import daily from "@/assets/daily.png"
     import { CaretBottom } from '@element-plus/icons-vue';
 
-    import { ref } from 'vue'
+    import { ref, reactive } from 'vue'
     import { useChart } from '@/hooks/useChart.ts'
 
     import { chartDataApi } from '@/api/dashboard'
 
     const chartRef = ref(null)
-    const chartOptions: any = {
-        title: {
-            text: '电量统计'
-        },
-        tooltip: {
-            trigger: 'axis'
-        },
-        legend: {
-            data: []
-        },
-        xAxis: {
-            type: 'category',
-            boundaryGap: false,
-            data: ['13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00']
-        },
-        yAxis: {
-            type: 'value',
-            name: 'kW',
-            axisLabel: {
-                formatter: '{value}kW'
-            }
-        },
-        series: [
-            {
-                name: '',
-                type: 'line',
-                data: [],
-                itemStyle: {
-                    color: 'purple',
-                    shadowColor: 'rgba(0,0,0,255,0.5)',
-                    shadowBlur: 10
-                },
-                lineStyle: {
-                    width: 4
-                },
-                smooth: true
-            },
-            {
-                name: '',
-                type: 'line',
-                data: [],
-                itemStyle: {
-                    color: 'lightgreen',
-                    shadowColor: 'rgba(0,0,0,255,0.5)',
-                    shadowBlur: 10
-                },
-                lineStyle: {
-                    width: 4
-                },
-                smooth: true
-            },
-            {
-                name: '',
-                type: 'line',
-                data: [],
-                itemStyle: {
-                    color: 'skyblue',
-                    shadowColor: 'rgba(0,0,0,255,0.5)',
-                    shadowBlur: 10
-                },
-                lineStyle: {
-                    width: 4
-                },
-                smooth: true
-            },
-
-        ]
-    }
-
-    // chartDataApi().then(res => {  // then只会保证括号中的代码阻塞，不会阻塞外面的代码
-    //     chartOptions.legend = res.data.list.map((item: any) => item.name)
-    //     for (let i = 0; i < res.data.list.length; i++) {
-    //         chartOptions.series[i].name = res.data.list[i].name
-    //         chartOptions.series[i].data = res.data.list[i].data
-    //     }
-    // })
 
     const setChartData = async () => {
-        const res = await chartDataApi()  // await只能阻塞函数体内其后的代码，也不会阻塞函数体外的代码
-        chartOptions.legend = res.data.list.map((item: any) => item.name)
+        const chartOptions: any = reactive({
+            title: {
+                text: '电量统计'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: []
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: ['13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00']
+            },
+            yAxis: {
+                type: 'value',
+                name: 'kW',
+                axisLabel: {
+                    formatter: '{value}kW'
+                }
+            },
+            series: [
+                {
+                    name: '',
+                    type: 'line',
+                    data: [],
+                    itemStyle: {
+                        color: 'purple',
+                        shadowColor: 'rgba(0,0,0,255,0.5)',
+                        shadowBlur: 10
+                    },
+                    lineStyle: {
+                        width: 4
+                    },
+                    smooth: true
+                },
+                {
+                    name: '',
+                    type: 'line',
+                    data: [],
+                    itemStyle: {
+                        color: 'lightgreen',
+                        shadowColor: 'rgba(0,0,0,255,0.5)',
+                        shadowBlur: 10
+                    },
+                    lineStyle: {
+                        width: 4
+                    },
+                    smooth: true
+                },
+                {
+                    name: '',
+                    type: 'line',
+                    data: [],
+                    itemStyle: {
+                        color: 'skyblue',
+                        shadowColor: 'rgba(0,0,0,255,0.5)',
+                        shadowBlur: 10
+                    },
+                    lineStyle: {
+                        width: 4
+                    },
+                    smooth: true
+                },
+
+            ]
+        })
+        const res = await chartDataApi()
+        chartOptions.legend.data = res.data.list.map((item: any) => item.name)
         for (let i = 0; i < res.data.list.length; i++) {
             chartOptions.series[i].name = res.data.list[i].name
             chartOptions.series[i].data = res.data.list[i].data
         }
-
+        return chartOptions
     }
 
-    setChartData()
 
-    useChart(chartRef, chartOptions)  // 组合式函数只能在setup()或<script setup>标签中顶层调用
+
+    useChart(chartRef, setChartData)
 
 </script>
 
