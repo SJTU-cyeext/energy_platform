@@ -177,6 +177,8 @@
     import { ref } from 'vue'
     import { useChart } from '@/hooks/useChart.ts'
 
+    import { chartDataApi } from '@/api/dashboard'
+
     const chartRef = ref(null)
     const chartOptions: any = {
         title: {
@@ -186,7 +188,7 @@
             trigger: 'axis'
         },
         legend: {
-            data: ['充电量', '充电时长', '充电功率']
+            data: []
         },
         xAxis: {
             type: 'category',
@@ -202,9 +204,9 @@
         },
         series: [
             {
-                name: '充电量',
+                name: '',
                 type: 'line',
-                data: [20, 50, 30, 70, 60, 80, 40, 60, 50],
+                data: [],
                 itemStyle: {
                     color: 'purple',
                     shadowColor: 'rgba(0,0,0,255,0.5)',
@@ -216,9 +218,9 @@
                 smooth: true
             },
             {
-                name: '充电时长',
+                name: '',
                 type: 'line',
-                data: [40, 60, 50, 80, 70, 90, 60, 70, 80],
+                data: [],
                 itemStyle: {
                     color: 'lightgreen',
                     shadowColor: 'rgba(0,0,0,255,0.5)',
@@ -230,9 +232,9 @@
                 smooth: true
             },
             {
-                name: '充电功率',
+                name: '',
                 type: 'line',
-                data: [30, 40, 60, 50, 70, 20, 30, 40, 60],
+                data: [],
                 itemStyle: {
                     color: 'skyblue',
                     shadowColor: 'rgba(0,0,0,255,0.5)',
@@ -247,7 +249,27 @@
         ]
     }
 
-    useChart(chartRef, chartOptions)
+    // chartDataApi().then(res => {  // then只会保证括号中的代码阻塞，不会阻塞外面的代码
+    //     chartOptions.legend = res.data.list.map((item: any) => item.name)
+    //     for (let i = 0; i < res.data.list.length; i++) {
+    //         chartOptions.series[i].name = res.data.list[i].name
+    //         chartOptions.series[i].data = res.data.list[i].data
+    //     }
+    // })
+
+    const setChartData = async () => {
+        const res = await chartDataApi()  // await只能阻塞函数体内其后的代码，也不会阻塞函数体外的代码
+        chartOptions.legend = res.data.list.map((item: any) => item.name)
+        for (let i = 0; i < res.data.list.length; i++) {
+            chartOptions.series[i].name = res.data.list[i].name
+            chartOptions.series[i].data = res.data.list[i].data
+        }
+
+    }
+
+    setChartData()
+
+    useChart(chartRef, chartOptions)  // 组合式函数只能在setup()或<script setup>标签中顶层调用
 
 </script>
 
