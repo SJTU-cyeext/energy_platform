@@ -179,19 +179,71 @@
 
     const chartRef = ref(null)
     const chartOptions: any = {
+        title: {
+            text: '电量统计'
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            data: ['充电量', '充电时长', '充电功率']
+        },
         xAxis: {
             type: 'category',
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            boundaryGap: false,
+            data: ['13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00']
         },
         yAxis: {
-            type: 'value'
+            type: 'value',
+            name: 'kW',
+            axisLabel: {
+                formatter: '{value}kW'
+            }
         },
         series: [
             {
-                data: [150, 230, 224, 218, 135, 147, 260],
+                name: '充电量',
                 type: 'line',
+                data: [20, 50, 30, 70, 60, 80, 40, 60, 50],
+                itemStyle: {
+                    color: 'purple',
+                    shadowColor: 'rgba(0,0,0,255,0.5)',
+                    shadowBlur: 10
+                },
+                lineStyle: {
+                    width: 4
+                },
                 smooth: true
-            }
+            },
+            {
+                name: '充电时长',
+                type: 'line',
+                data: [40, 60, 50, 80, 70, 90, 60, 70, 80],
+                itemStyle: {
+                    color: 'lightgreen',
+                    shadowColor: 'rgba(0,0,0,255,0.5)',
+                    shadowBlur: 10
+                },
+                lineStyle: {
+                    width: 4
+                },
+                smooth: true
+            },
+            {
+                name: '充电功率',
+                type: 'line',
+                data: [30, 40, 60, 50, 70, 20, 30, 40, 60],
+                itemStyle: {
+                    color: 'skyblue',
+                    shadowColor: 'rgba(0,0,0,255,0.5)',
+                    shadowBlur: 10
+                },
+                lineStyle: {
+                    width: 4
+                },
+                smooth: true
+            },
+
         ]
     }
 
