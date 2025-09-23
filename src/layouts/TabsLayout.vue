@@ -16,7 +16,6 @@
 </template>
 
 <script setup lang="ts">
-    import type { TabPaneName } from 'element-plus'
     import { useTabStore } from '@/store/tabs';
     import { storeToRefs } from 'pinia';
     import { useRouter, useRoute } from 'vue-router'
@@ -30,7 +29,7 @@
     const route = useRoute()
 
     const { tabs, currentTab } = storeToRefs(tabStore)
-    const { addTab, setCurrentTab } = tabStore
+    const { addTab, setCurrentTab, removeTab } = tabStore
 
     // 刷新后不会引起url变化, 据此可以根据url拿到当前选中的menu
     const findObjectByUrl = (arr: MenuItem[], url: string): (MenuItem | null) => {
@@ -67,8 +66,9 @@
         setCurrentTab(tab.name, tab.url)  // 设置当前高亮
     }
 
-    const remove = (name: TabPaneName) => {
-        console.log(name);
+    const remove = (name: string) => {
+        removeTab(name)
+        router.push(currentTab.value.url)
     }
 </script>
 
