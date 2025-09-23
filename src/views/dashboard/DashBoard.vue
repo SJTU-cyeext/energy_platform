@@ -174,39 +174,28 @@
     import daily from "@/assets/daily.png"
     import { CaretBottom } from '@element-plus/icons-vue';
 
-    import * as echarts from 'echarts';
-    import { ref, onMounted } from 'vue'
+    import { ref } from 'vue'
+    import { useChart } from '@/hooks/useChart.ts'
 
     const chartRef = ref(null)
-    const chartRef2 = ref(null)
+    const chartOptions: any = {
+        xAxis: {
+            type: 'category',
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                data: [150, 230, 224, 218, 135, 147, 260],
+                type: 'line',
+                smooth: true
+            }
+        ]
+    }
 
-    onMounted(() => {
-
-        // 基于准备好的dom，初始化echarts实例
-        const myChart = echarts.init(chartRef.value);
-        // 绘制图表
-        myChart.setOption({
-            xAxis: {
-                type: 'category',
-                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-            },
-            yAxis: {
-                type: 'value'
-            },
-            series: [
-                {
-                    data: [150, 230, 224, 218, 135, 147, 260],
-                    type: 'line',
-                    smooth: true
-                }
-            ]
-        });
-        const resizeChart = () => {
-            myChart.resize()
-        }
-
-        window.addEventListener("resize", resizeChart)
-    })
+    useChart(chartRef, chartOptions)
 
 </script>
 
