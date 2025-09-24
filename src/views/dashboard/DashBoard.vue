@@ -148,10 +148,10 @@
                     </div>
                 </template>
                 <el-row>
-                    <el-col :span="6">
+                    <el-col :span="8">
                         <div ref="chartRef2" style="width: 100%; height: 400px;"></div>
                     </el-col>
-                    <el-col :span="18">
+                    <el-col :span="16">
                         <div ref="chartRef" style="width: 100%; height: 400px;"></div>
                     </el-col>
                 </el-row>
@@ -177,9 +177,10 @@
     import { ref, reactive } from 'vue'
     import { useChart } from '@/hooks/useChart.ts'
 
-    import { chartDataApi } from '@/api/dashboard'
+    import { chartDataApi, chartDataApi2 } from '@/api/dashboard'
 
     const chartRef = ref(null)
+    const chartRef2 = ref(null)
 
     const setChartData = async () => {
         const chartOptions: any = reactive({
@@ -199,7 +200,6 @@
             },
             yAxis: {
                 type: 'value',
-                name: 'kW',
                 axisLabel: {
                     formatter: '{value}kW'
                 }
@@ -258,10 +258,53 @@
         }
         return chartOptions
     }
-
-
+    const setChartData2 = async () => {
+        const chartOptions: any = reactive({
+            legend: {
+                top: 'bottom'
+            },
+            tooltip: {
+                trigger: "item",
+                formatter: '{a}<br/>{b}:{c}'
+            },
+            series: [
+                {
+                    name: '营收占比',
+                    type: 'pie',
+                    label: {
+                        show: false
+                    },
+                    radius: ["50%", "70%"],
+                    center: ['50%', '50%'],
+                    roseType: "area",
+                    emphasis: {
+                        label: {
+                            show: true,
+                            fontSize: "16",
+                            fontWeight: "bold"
+                        }
+                    },
+                    data: []
+                }
+            ],
+            graphic: {
+                type: 'text',
+                left: "center",
+                top: "center",
+                style: {
+                    text: "营收占比",
+                    fontSize: 20,
+                    fill: "#333"
+                }
+            }
+        })
+        const res = await chartDataApi2()
+        chartOptions.series[0].data = res.data.list
+        return chartOptions
+    }
 
     useChart(chartRef, setChartData)
+    useChart(chartRef2, setChartData2)
 
 </script>
 

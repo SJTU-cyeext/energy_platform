@@ -223,3 +223,18 @@ Mock.mock("https://www.demo.com/chartData", "get", () => {
         }
     }
 })
+
+// echarts图表接口2 饼图
+Mock.mock("https://www.demo.com/chartData2", "get", () => {
+    return {
+        code: 200,
+        message: "操作成功",
+        data: {
+            list: [
+                { value: 35, name: '充电桩' },
+                { value: 30, name: '充电站' },
+                { value: 24, name: '充电柜' },
+            ]
+        }
+    }
+})

@@ -1,9 +1,11 @@
 import { get } from '@/utils/http'
 
 const Api = {
-    ChartData: '/chartData'
+    ChartData: '/chartData',
+    ChartData2: '/chartData2',
 }
 
 const chartDataApi = () => get(Api.ChartData)
 
-export { chartDataApi }
+const chartDataApi2 = () => get(Api.ChartData2)
+export { chartDataApi, chartDataApi2 }
