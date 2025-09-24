@@ -157,7 +157,16 @@
                 </el-row>
             </el-card>
         </el-col>
-        <el-col :span="6"></el-col>
+        <el-col :span="6">
+            <el-card class="ml">
+                <template #header>
+                    <div class="card-header">
+                        <h1>设备总览</h1>
+                    </div>
+                </template>
+                <div ref="chartRef3" style="width: 100%; height: 240px;"></div>
+            </el-card>
+        </el-col>
     </el-row>
 </template>
 
@@ -177,10 +186,11 @@
     import { ref, reactive } from 'vue'
     import { useChart } from '@/hooks/useChart.ts'
 
-    import { chartDataApi, chartDataApi2 } from '@/api/dashboard'
+    import { chartDataApi, chartDataApi2, chartDataApi3 } from '@/api/dashboard'
 
     const chartRef = ref(null)
     const chartRef2 = ref(null)
+    const chartRef3 = ref(null)
 
     const setChartData = async () => {
         const chartOptions: any = reactive({
@@ -303,8 +313,42 @@
         return chartOptions
     }
 
+    const setChartData3 = async () => {
+        const chartOptions: any = reactive({
+            radar: {
+                // shape: 'circle',
+                indicator: [
+                    { name: '闲置数', max: 65 },
+                    { name: '使用数', max: 160 },
+                    { name: '故障数', max: 300 },
+                    { name: '维修数', max: 380 },
+                    { name: '更换数', max: 520 },
+                    { name: '报废数', max: 250 }
+                ]
+            },
+            series: [
+                {
+                    name: 'Budget vs spending',
+                    type: 'radar',
+                    data: [
+                        {
+                            value: [],
+                            name: 'Allocated Budget'
+                        },
+
+                    ]
+                }
+            ]
+        })
+        const res = chartDataApi3()
+        chartOptions.series[0].data[0].value = (await res).data.list
+        console.log(chartOptions)
+        return chartOptions
+    }
+
     useChart(chartRef, setChartData)
     useChart(chartRef2, setChartData2)
+    useChart(chartRef3, setChartData3)
 
 </script>
 
