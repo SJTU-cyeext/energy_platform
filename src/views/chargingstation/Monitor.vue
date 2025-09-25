@@ -45,7 +45,7 @@
     </el-card>
 
     <el-card class="mt">
-        <el-button type="primary" icon="Plus">新增充电站</el-button>
+        <el-button type="primary" icon="Plus" @click="handleAdd">新增充电站</el-button>
     </el-card>
 
     <el-card class="mt">
@@ -92,7 +92,6 @@
     import { listApi } from '@/api/chargingstation';
     import StationForm from './components/StationForm.vue';
     import type { RowType } from '@/types/station'
-    import useAuthStore from '@/store/auth';
     import { useStationStore } from '@/store/station';
 
     const select = ref("name")
@@ -145,10 +144,15 @@
     const visible = ref<boolean>(false)
 
     const stationStore = useStationStore()
-    const { setRowData } = stationStore
+    const { setRowData, resetRowData } = stationStore
 
     const edit = (row: RowType) => {
         setRowData(row)
+        visible.value = true
+    }
+
+    const handleAdd = () => {
+        resetRowData()
         visible.value = true
     }
 

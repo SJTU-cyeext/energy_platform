@@ -1,5 +1,6 @@
 <template>
-    <el-dialog :model-value="dialogVisible" title="新增充电站" @close="handleClose">
+    <!-- 必须添加destroy-on-close以防出现编辑和新增切换时的弹窗错误信息残留的问题 -->
+    <el-dialog :model-value="dialogVisible" :title="title" @close="handleClose" destroy-on-close>
         <el-form :model="ruleForm" :rules="rules" label-width="120px">
 
             <el-row>
@@ -133,9 +134,17 @@
     // 站点ID、充电状态、正在充电数和故障数都是不可编辑的
     const disabled = ref<boolean>(false)
 
+    const title = ref<string>("")
+
     watch(() => props.dialogVisible, () => {  // 侦听弹窗, 一旦弹窗就出发修改ruleForm
+        if (rowData.value.name) {  // 弹窗时有值表明是点了编辑
+            title.value = "编辑充电站信息"
+            disabled.value = true
+        } else {
+            title.value = "新增充电站信息"
+            disabled.value = false
+        }
         ruleForm.value = rowData.value
-        disabled.value = true
     })
 
 

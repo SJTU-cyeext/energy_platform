@@ -21,5 +21,20 @@ export const useStationStore = defineStore("station", () => {
 
         rowData.value = data
     }
-    return { rowData, setRowData }
+
+    const resetRowData = () => {
+        rowData.value = {
+            name: '',
+            id: '',
+            city: '',
+            person: '',
+            tel: '',
+            fast: '',
+            slow: '',
+            status: 1,
+            now: "",
+            fault: ""
+        }
+    }
+    return { rowData, setRowData, resetRowData }
 })
