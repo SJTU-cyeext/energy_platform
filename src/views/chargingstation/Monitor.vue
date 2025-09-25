@@ -2,7 +2,7 @@
     <el-card>
         <el-row :gutter="20">
             <el-col :span="6">
-                <el-input v-model="formParams.input" placeholder="请输入站点名称、ID" style="max-width: 600px;"
+                <el-input v-model.trim="formParams.input" placeholder="请输入站点名称、ID" style="max-width: 600px;"
                     class="input-with-select">
                     <template #append>
                         <el-select v-model="select" placeholder="" style="width: 115px">
@@ -22,8 +22,8 @@
                 </el-select>
             </el-col>
             <el-col :span="6">
-                <el-button type="primary" @click="search">查询</el-button>
-                <el-button>重置</el-button>
+                <el-button type="primary" @click="loadData">查询</el-button>
+                <el-button @click="handleReset">重置</el-button>
             </el-col>
         </el-row>
     </el-card>
@@ -82,11 +82,14 @@
             :page-sizes="[10, 20, 30, 40]" background layout="total, sizes, prev, pager, next, jumper" :total="totals"
             @size-change="handleSizeChange" @current-change="handleCurrentChange" />
     </el-card>
+
+    <StationForm />
 </template>
 
 <script setup lang="ts">
     import { onMounted, reactive, ref } from 'vue';
     import { listApi } from '@/api/chargingstation';
+    import StationForm from './components/StationForm.vue';
 
     const select = ref("name")
     const formParams = reactive({
@@ -118,16 +121,20 @@
         loadData()
     })
 
-    const search = () => {
-        loadData()  // input双向绑定了formParams，输入后重新调用loadData即可
-    }
-
     const handleSizeChange = (val: number) => {
         pageInfo.pageSize = val
         loadData()
     }
     const handleCurrentChange = (val: number) => {
         pageInfo.page = val
+        loadData()
+    }
+
+    const handleReset = () => {
+        pageInfo.page = 1
+        pageInfo.pageSize = 10
+        formParams.input = ''
+        formParams.value = 1
         loadData()
     }
 </script>
