@@ -1,5 +1,5 @@
 <template>
-    <el-dialog v-model="dialogVisible" title="新增充电站">
+    <el-dialog :model-value="dialogVisible" title="新增充电站" @close="handleClose">
         <el-form :model="ruleForm" :rules="rules" label-width="120px">
 
             <el-row>
@@ -45,16 +45,23 @@
                 </el-col>
             </el-row>
         </el-form>
+        <template #footer>
+            <div class="dialog-footer">
+                <el-button @click="handleCancel">取消</el-button>
+                <el-button type="primary">
+                    确认
+                </el-button>
+            </div>
+        </template>
     </el-dialog>
 </template>
 
 <script setup lang="ts">
     import { ref } from 'vue'
-    import type { RowForm } from '@/types/station'
+    import type { RowType } from '@/types/station'
     import type { FormRules } from 'element-plus'
 
-    const dialogVisible = ref<boolean>(true)
-    const ruleForm = ref<RowForm>({
+    const ruleForm = ref<RowType>({
         name: '',
         id: '',
         city: '',
@@ -67,7 +74,7 @@
         fault: ""
 
     })
-    const rules = ref<FormRules<RowForm>>({
+    const rules = ref<FormRules<RowType>>({
         name: [
             { required: true, message: "站点名称不能为空", trigger: 'blur' }
         ],
@@ -99,6 +106,26 @@
             { required: true, message: "故障数不能为空", trigger: 'blur' }
         ],
     })
+
+    const props = defineProps({
+        dialogVisible: {
+            // type: Boolean,
+            required: true
+        }
+    })
+
+    const emits = defineEmits(["close"])
+    const handleCancel = () => {
+
+        // props.dialogVisible = false  // 子组件无法直接更改父组件的数据
+        emits("close")
+    }
+
+    // Dialog组件右上角自带的关闭按钮不会触发父组件的visible.value变为false, 会导致再次点击编辑不会弹出Dialog组件
+    const handleClose = () => {
+        emits("close")
+    }
+
 </script>
 
 <style scoped></style>

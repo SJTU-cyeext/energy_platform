@@ -72,7 +72,7 @@
             <el-table-column prop="tel" label="负责人电话" />
             <el-table-column label="操作">
                 <template #default="scope">
-                    <el-button type="primary" size="small">编辑</el-button>
+                    <el-button type="primary" size="small" @click="edit(scope.row)">编辑</el-button>
                     <el-button type="danger" size="small">删除</el-button>
                 </template>
             </el-table-column>
@@ -83,13 +83,15 @@
             @size-change="handleSizeChange" @current-change="handleCurrentChange" />
     </el-card>
 
-    <StationForm />
+    <!-- HTML中驼峰式命名的属性要变为横线连接 -->
+    <StationForm :dialog-visible="visible" @close="visible = false" />
 </template>
 
 <script setup lang="ts">
     import { onMounted, reactive, ref } from 'vue';
     import { listApi } from '@/api/chargingstation';
     import StationForm from './components/StationForm.vue';
+    import type { RowType } from '@/types/station'
 
     const select = ref("name")
     const formParams = reactive({
@@ -137,6 +139,12 @@
         formParams.value = 1
         loadData()
     }
+
+    const visible = ref<boolean>(false)
+    const edit = (row: RowType) => {
+        visible.value = true
+    }
+
 </script>
 
 <style scoped></style>

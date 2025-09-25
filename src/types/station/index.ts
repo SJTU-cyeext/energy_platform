@@ -1,4 +1,4 @@
-interface RowForm {
+interface RowType {
     name: string
     id: string
     city: string
@@ -11,4 +11,4 @@ interface RowForm {
     fault: string
 }
 
-export type { RowForm }
+export type { RowType}
