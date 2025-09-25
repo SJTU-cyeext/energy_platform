@@ -239,7 +239,7 @@ Mock.mock("https://www.demo.com/chartData2", "get", () => {
     }
 })
 
-// echarts图表借口3 雷达图
+// echarts图表接口3 雷达图
 Mock.mock("https://www.demo.com/chartData3", "get", () => {
     return {
         code: 200,
@@ -641,6 +641,7 @@ let chargingStation = [
 // 原始的数据备份
 const originalChargingStation = JSON.parse(JSON.stringify(chargingStation));
 
+// 充电站列表接口
 Mock.mock("https://www.demo.com/stationList", 'post', (options: any) => {
     chargingStation = originalChargingStation
     const { id, name, status, page, pageSize } = options.body ? JSON.parse(options.body) : {}
@@ -666,5 +667,16 @@ Mock.mock("https://www.demo.com/stationList", 'post', (options: any) => {
             total
         },
 
+    }
+});
+
+// 充电站新增/修改接口
+Mock.mock("https://www.demo.com/stationList/edit", 'post', (options: any) => {
+    const res: any = JSON.parse(JSON.stringify(options.body))
+    console.log("新增/编辑充电站接口收到的数据: ", res)
+    return {
+        code: 200,
+        success: true,
+        data: '操作成功'
     }
 });

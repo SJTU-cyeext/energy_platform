@@ -84,7 +84,7 @@
     </el-card>
 
     <!-- HTML中驼峰式命名的属性要变为横线连接 -->
-    <StationForm :dialog-visible="visible" @close="visible = false" />
+    <StationForm :dialog-visible="visible" @close="visible = false" @reload="loadData" />
 </template>
 
 <script setup lang="ts">

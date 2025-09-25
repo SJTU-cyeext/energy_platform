@@ -1,7 +1,7 @@
 <template>
     <!-- 必须添加destroy-on-close以防出现编辑和新增切换时的弹窗错误信息残留的问题 -->
     <el-dialog :model-value="dialogVisible" :title="title" @close="handleClose" destroy-on-close>
-        <el-form :model="ruleForm" :rules="rules" label-width="120px">
+        <el-form :model="ruleForm" :rules="rules" label-width="120px" ref="formRef">
 
             <el-row>
                 <el-col :span=12>
@@ -49,7 +49,7 @@
         <template #footer>
             <div class="dialog-footer">
                 <el-button @click="handleCancel">取消</el-button>
-                <el-button type="primary">
+                <el-button type="primary" @click="handleConfirm">
                     确认
                 </el-button>
             </div>
@@ -60,9 +60,11 @@
 <script setup lang="ts">
     import { ref, watch } from 'vue'
     import type { RowType } from '@/types/station'
-    import type { FormRules } from 'element-plus'
+    import type { FormInstance, FormRules } from 'element-plus'
     import { useStationStore } from '@/store/station'
     import { storeToRefs } from 'pinia'
+    import { EditApi } from '@/api/chargingstation'
+    import { ElMessage } from 'element-plus'
 
     const ruleForm = ref<RowType>({
         name: '',
@@ -116,7 +118,7 @@
         }
     })
 
-    const emits = defineEmits(["close"])
+    const emits = defineEmits(["close", "reload"])
     const handleCancel = () => {
 
         // props.dialogVisible = false  // 子组件无法直接更改父组件的数据
@@ -146,6 +148,28 @@
         }
         ruleForm.value = rowData.value
     })
+
+
+    const formRef = ref<FormInstance>()
+
+    const handleConfirm = () => {
+
+        console.log(formRef.value)
+        formRef.value?.validate(async (valid: boolean) => {
+            if (valid) {
+                const res = await EditApi(rowData.value)
+                if (res.code === 200) {
+                    ElMessage({
+                        message: res.data,
+                        type: 'success'
+                    })
+                    handleCancel()
+                    emits("reload")
+                }
+
+            }
+        })
+    }
 
 
 </script>
