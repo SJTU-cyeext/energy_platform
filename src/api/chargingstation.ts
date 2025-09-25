@@ -3,7 +3,8 @@ import type { RowType } from "@/types/station";
 
 const Api = {
     List: '/stationList',
-    Edit: '/stationList/edit'
+    Edit: '/stationList/edit',
+    Delete: '/stationList/delete'
 }
 
 interface ListType {
@@ -18,8 +19,12 @@ const listApi = (data: ListType) => {
     return post(Api.List, data)
 }
 
-const EditApi = (data: RowType) => {
+const editApi = (data: RowType) => {
     return post(Api.Edit, data)
 }
 
-export { listApi, EditApi }
+const deleteApi = (id: string) => {
+    return post(Api.Delete, { id })
+}
+
+export { listApi, editApi, deleteApi }

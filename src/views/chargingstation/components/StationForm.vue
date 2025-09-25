@@ -63,7 +63,7 @@
     import type { FormInstance, FormRules } from 'element-plus'
     import { useStationStore } from '@/store/station'
     import { storeToRefs } from 'pinia'
-    import { EditApi } from '@/api/chargingstation'
+    import { editApi } from '@/api/chargingstation'
     import { ElMessage } from 'element-plus'
 
     const ruleForm = ref<RowType>({
@@ -157,7 +157,7 @@
         console.log(formRef.value)
         formRef.value?.validate(async (valid: boolean) => {
             if (valid) {
-                const res = await EditApi(rowData.value)
+                const res = await editApi(rowData.value)
                 if (res.code === 200) {
                     ElMessage({
                         message: res.data,

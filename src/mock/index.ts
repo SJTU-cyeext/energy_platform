@@ -680,3 +680,13 @@ Mock.mock("https://www.demo.com/stationList/edit", 'post', (options: any) => {
         data: '操作成功'
     }
 });
+
+// 删除充电站接口
+Mock.mock("https://www.demo.com/stationList/delete", "post", (options: any) => {
+    console.log("新增/编辑充电站接口收到的数据: ", JSON.parse(options.body))
+    return {
+        code: 200,
+        success: true,
+        data: '操作成功'
+    }
+})
