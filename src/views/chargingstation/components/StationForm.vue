@@ -8,7 +8,7 @@
                         <el-input v-model="ruleForm.name"></el-input>
                     </el-form-item>
                     <el-form-item label="站点ID: " prop="id">
-                        <el-input v-model="ruleForm.id"></el-input>
+                        <el-input v-model="ruleForm.id" :disabled="disabled"></el-input>
                     </el-form-item>
                     <el-form-item label="所属城市: " prop="city">
                         <el-input v-model="ruleForm.city"></el-input>
@@ -28,7 +28,7 @@
                         <el-input v-model="ruleForm.slow"></el-input>
                     </el-form-item>
                     <el-form-item label="充电站状态: " prop="status">
-                        <el-select v-model="ruleForm.status">
+                        <el-select v-model="ruleForm.status" :disabled="disabled">
                             <el-option label="全部" :value="1"></el-option>
                             <el-option label="使用中" :value="2"></el-option>
                             <el-option label="空闲中" :value="3"></el-option>
@@ -37,10 +37,10 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="正在充电数: " prop="now">
-                        <el-input v-model="ruleForm.now"></el-input>
+                        <el-input v-model="ruleForm.now" :disabled="disabled"></el-input>
                     </el-form-item>
                     <el-form-item label="故障数: " prop="fault">
-                        <el-input v-model="ruleForm.fault"></el-input>
+                        <el-input v-model="ruleForm.fault" :disabled="disabled"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -57,9 +57,11 @@
 </template>
 
 <script setup lang="ts">
-    import { ref } from 'vue'
+    import { ref, watch } from 'vue'
     import type { RowType } from '@/types/station'
     import type { FormRules } from 'element-plus'
+    import { useStationStore } from '@/store/station'
+    import { storeToRefs } from 'pinia'
 
     const ruleForm = ref<RowType>({
         name: '',
@@ -72,7 +74,6 @@
         status: 1,
         now: "",
         fault: ""
-
     })
     const rules = ref<FormRules<RowType>>({
         name: [
@@ -125,6 +126,18 @@
     const handleClose = () => {
         emits("close")
     }
+
+    const stationStore = useStationStore()
+    const { rowData } = storeToRefs(stationStore)
+
+    // 站点ID、充电状态、正在充电数和故障数都是不可编辑的
+    const disabled = ref<boolean>(false)
+
+    watch(() => props.dialogVisible, () => {  // 侦听弹窗, 一旦弹窗就出发修改ruleForm
+        ruleForm.value = rowData.value
+        disabled.value = true
+    })
+
 
 </script>
 

@@ -92,6 +92,8 @@
     import { listApi } from '@/api/chargingstation';
     import StationForm from './components/StationForm.vue';
     import type { RowType } from '@/types/station'
+    import useAuthStore from '@/store/auth';
+    import { useStationStore } from '@/store/station';
 
     const select = ref("name")
     const formParams = reactive({
@@ -141,7 +143,12 @@
     }
 
     const visible = ref<boolean>(false)
+
+    const stationStore = useStationStore()
+    const { setRowData } = stationStore
+
     const edit = (row: RowType) => {
+        setRowData(row)
         visible.value = true
     }
 
