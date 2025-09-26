@@ -110,11 +110,79 @@
                 </el-card>
             </el-col>
         </el-row>
+        <el-card class="mt">
+            <div ref="chartRef" style="width: 100%; height: 300px;">
+
+            </div>
+        </el-card>
     </div>
 </template>
 
 <script setup lang="ts">
     import formatNumberToThousands from '@/utils/toThousands';
+    import { reactive, ref } from 'vue';
+    import { RevenueApi } from '@/api/chargingstation';
+    import { useChart } from '@/hooks/useChart.ts'
+
+    const chartRef = ref(null)
+    const setChartData = async () => {
+        const chartOptions = reactive({
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: []
+            },
+            xAxis: {
+                type: 'category',
+                data: ['一月', '二月', '三月', '四月', '五月', '六月', '七月']
+            },
+            yAxis: [
+                {
+                    type: 'value',
+                    name: '销售',
+                    position: 'left'
+                },
+                {
+                    type: 'value',
+                    name: '访问量',
+                    position: 'right'
+                }
+            ],
+            series: [
+                {
+                    name: '',
+                    type: 'bar',
+                    data: [],
+                    yAxisIndex: 0,
+                    itemStyle: {
+                        color: '#409eff'
+                    }
+                },
+                {
+                    name: '',
+                    type: 'line',
+                    data: [],
+                    yAxisIndex: 1,
+                    itemStyle: {
+                        color: '#409eff'
+                    },
+                    smooth: true
+                }
+            ]
+        })
+        const res = await RevenueApi()
+        chartOptions.legend.data = res.data.list.map((item: any) => item.name)
+        for (let i = 0; i < res.data.list.length; i++) {
+            chartOptions.series[i].name = res.data.list[i].name
+            chartOptions.series[i].data = res.data.list[i].data
+        }
+        return chartOptions
+    }
+    useChart(chartRef, setChartData)
+
+
+
 </script>
 
 <style lang=less scoped>

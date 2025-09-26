@@ -1,10 +1,11 @@
-import { post } from "@/utils/http";
+import { post, get } from "@/utils/http";
 import type { RowType } from "@/types/station";
 
 const Api = {
     List: '/stationList',
     Edit: '/stationList/edit',
-    Delete: '/stationList/delete'
+    Delete: '/stationList/delete',
+    Revenue: '/revenueChart'
 }
 
 interface ListType {
@@ -27,4 +28,8 @@ const deleteApi = (id: string) => {
     return post(Api.Delete, { id })
 }
 
-export { listApi, editApi, deleteApi }
+const RevenueApi = () => {
+    return get(Api.Revenue)
+}
+
+export { listApi, editApi, deleteApi, RevenueApi }
