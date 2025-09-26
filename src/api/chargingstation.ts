@@ -6,7 +6,8 @@ const Api = {
     Edit: '/stationList/edit',
     Delete: '/stationList/delete',
     Revenue: '/revenueChart',
-    RevenueList: '/revenueList'
+    RevenueList: '/revenueList',
+    PileList: '/pileList'
 }
 
 interface ListType {
@@ -43,4 +44,8 @@ const revenueListAPi = (data: RevenueListType) => {
     return post(Api.RevenueList, data)
 }
 
-export { listApi, editApi, deleteApi, revenueChartApi, revenueListAPi }
+const pileListApi = () => {
+    return post(Api.PileList)
+}
+
+export { listApi, editApi, deleteApi, revenueChartApi, revenueListAPi, pileListApi }

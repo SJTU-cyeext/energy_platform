@@ -1,6 +1,7 @@
 <template>
     <el-card>
-        <el-select filterable placeholder="Select" style="width: 240px">
+        <el-select filterable placeholder="请选择" style="width: 240px" v-model="value">
+            <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
     </el-card>
     <el-card class="mt">
@@ -52,6 +53,27 @@
 
 <script setup lang="ts">
     import free from '@/assets/free.png'
+    import { pileListApi } from '@/api/chargingstation';
+    import { onMounted } from 'vue';
+    import { ref } from 'vue'
+
+    const value = ref('')
+
+    const options = ref<any>([])
+
+    const loadData = async () => {
+        try {
+            const { data } = await pileListApi()
+            options.value = data
+            console.log(data)
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    onMounted(() => {
+        loadData()
+    })
 </script>
 
 <style lang="less" scoped>
