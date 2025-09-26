@@ -12,7 +12,7 @@
                         <h4>今日总收入（元）</h4>
                     </div>
                     <div class="total">
-                        <h1>239824</h1>
+                        <h1>{{ formatNumberToThousands(341243.43) }}</h1>
                         <div class="percent" style="color: green;">
                             -17%
                         </div>
@@ -30,7 +30,7 @@
                         <h4>本月总收入（万元）</h4>
                     </div>
                     <div class="total">
-                        <h1>2924</h1>
+                        <h1>{{ 2924.00 }}</h1>
                         <div class="percent" style="color: green;">
                             -21%
                         </div>
@@ -66,7 +66,7 @@
                         <h4>服务费总金额（元）</h4>
                     </div>
                     <div class="total mt">
-                        <h1>239824</h1>
+                        <h1>{{ formatNumberToThousands(132492.34) }}</h1>
                         <div class="percent" style="color: green;">
                             -8%
                         </div>
@@ -84,7 +84,7 @@
                         <h4>停车费总金额（元）</h4>
                     </div>
                     <div class="total">
-                        <h1>239824</h1>
+                        <h1>{{ 43290.20 }}</h1>
                         <div class="percent" style="color: green;">
                             -4%
                         </div>
@@ -102,7 +102,7 @@
                         <h4>电费总金额（元）</h4>
                     </div>
                     <div class="total">
-                        <h1>239824</h1>
+                        <h1>{{ 4134953.78 }}</h1>
                         <div class="percent" style="color: green;">
                             -16%
                         </div>
@@ -114,7 +114,7 @@
 </template>
 
 <script setup lang="ts">
-
+    import formatNumberToThousands from '@/utils/toThousands';
 </script>
 
 <style lang=less scoped>
