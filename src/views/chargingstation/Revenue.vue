@@ -115,20 +115,25 @@
         </el-card>
 
         <el-card class="mt">
+            <el-input v-model.trim="name" placeholder="请输入站点名称" style="max-width: 400px;">
+                <template #append>
+                    <el-button icon="Search" @click="loadData" />
+                </template>
+            </el-input>
             <el-table :data="tableData" style="width: 100%;" v-loading="loading">
                 <el-table-column type="index" label="序号" width="80" />
                 <el-table-column prop="name" label="站点名称" />
                 <el-table-column prop="id" label="站点ID" />
                 <el-table-column prop="city" label="所属城市" />
                 <el-table-column prop="count" label="充电桩总数 (个)" />
-                <el-table-column prop="day" label="单日总收入 (元)">
+                <el-table-column prop="day" label="单日总收入 (元)" sortable>
                     <template #default="scope">
                         <span class="mr">{{ scope.row.day }}</span>
                         <el-tag v-if="scope.row.percent > 0" type="danger">+{{ scope.row.percent }}%</el-tag>
                         <el-tag v-else type="success">{{ scope.row.percent }}%</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column prop="month" label="月度总收入 (元)">
+                <el-table-column prop="month" label="月度总收入 (万元)" sortable>
                     <template #default="scope">
                         <span class="mr">{{ scope.row.month }}</span>
                         <el-tag v-if="scope.row.mpercent > 0" type="danger">+{{ scope.row.mpercent }}%</el-tag>
@@ -140,15 +145,19 @@
                 <el-table-column prop="serviceFee" label="服务费营收 (元)" />
                 <el-table-column prop="member" label="会员储值金 (元)" />
             </el-table>
+            <el-pagination class="fr mt mb" v-model:current-page="pageInfo.page" v-model:page-size="pageInfo.pageSize"
+                :page-sizes="[10, 20, 30, 40]" background layout="total, sizes, prev, pager, next, jumper"
+                :total="totals" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
         </el-card>
     </div>
 </template>
 
 <script setup lang="ts">
     import formatNumberToThousands from '@/utils/toThousands';
-    import { reactive, ref } from 'vue';
+    import { onMounted, reactive, ref } from 'vue';
     import { revenueChartApi, revenueListAPi } from '@/api/chargingstation';
     import { useChart } from '@/hooks/useChart.ts'
+    import { usePagination } from '@/hooks/usePagination.ts'
 
     const chartRef = ref(null)
     const setChartData = async () => {
@@ -214,11 +223,12 @@
 
     const tableData = ref([])
     const loading = ref<boolean>(false)
+    const name = ref('')
 
     const loadData = async () => {
         loading.value = true
         try {
-            let { data: { list, total } } = await revenueListAPi({ page: 1, pageSize: 10 })
+            let { data: { list, total } } = await revenueListAPi({ ...pageInfo, name: name.value })
             list = list.map((item: any) => {
                 return {
                     ...item,
@@ -226,12 +236,17 @@
                 }
             })
             tableData.value = list
+            setTotals(total)
             loading.value = false
         } catch (e) {
             console.log(e)
         }
     }
-    loadData()
+    onMounted(() => {
+        loadData()
+    })
+
+    const { pageInfo, handleSizeChange, handleCurrentChange, totals, setTotals } = usePagination(loadData)
 
 
 </script>
