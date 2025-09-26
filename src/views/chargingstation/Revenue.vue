@@ -111,9 +111,35 @@
             </el-col>
         </el-row>
         <el-card class="mt">
-            <div ref="chartRef" style="width: 100%; height: 300px;">
+            <div ref="chartRef" style="width: 100%; height: 300px;"></div>
+        </el-card>
 
-            </div>
+        <el-card class="mt">
+            <el-table :data="tableData" style="width: 100%;" v-loading="loading">
+                <el-table-column type="index" label="序号" width="80" />
+                <el-table-column prop="name" label="站点名称" />
+                <el-table-column prop="id" label="站点ID" />
+                <el-table-column prop="city" label="所属城市" />
+                <el-table-column prop="count" label="充电桩总数 (个)" />
+                <el-table-column prop="day" label="单日总收入 (元)">
+                    <template #default="scope">
+                        <span class="mr">{{ scope.row.day }}</span>
+                        <el-tag v-if="scope.row.percent > 0" type="danger">+{{ scope.row.percent }}%</el-tag>
+                        <el-tag v-else type="success">{{ scope.row.percent }}%</el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="month" label="月度总收入 (元)">
+                    <template #default="scope">
+                        <span class="mr">{{ scope.row.month }}</span>
+                        <el-tag v-if="scope.row.mpercent > 0" type="danger">+{{ scope.row.mpercent }}%</el-tag>
+                        <el-tag v-else type="success">{{ scope.row.mpercent }}%</el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="electricity" label="电费营收 (元)" />
+                <el-table-column prop="parkingFee" label="停车费营收 (元)" />
+                <el-table-column prop="serviceFee" label="服务费营收 (元)" />
+                <el-table-column prop="member" label="会员储值金 (元)" />
+            </el-table>
         </el-card>
     </div>
 </template>
@@ -121,7 +147,7 @@
 <script setup lang="ts">
     import formatNumberToThousands from '@/utils/toThousands';
     import { reactive, ref } from 'vue';
-    import { RevenueApi } from '@/api/chargingstation';
+    import { revenueChartApi, revenueListAPi } from '@/api/chargingstation';
     import { useChart } from '@/hooks/useChart.ts'
 
     const chartRef = ref(null)
@@ -171,16 +197,41 @@
                 }
             ]
         })
-        const res = await RevenueApi()
-        chartOptions.legend.data = res.data.list.map((item: any) => item.name)
-        for (let i = 0; i < res.data.list.length; i++) {
-            chartOptions.series[i].name = res.data.list[i].name
-            chartOptions.series[i].data = res.data.list[i].data
+        try {
+            const res = await revenueChartApi()
+            chartOptions.legend.data = res.data.list.map((item: any) => item.name)
+            res.data.list.forEach((item: any, idx: number) => {
+                chartOptions.series[idx].name = item.name
+                chartOptions.series[idx].data = item.data
+            });
+        } catch (e) {
+            console.error(e)
         }
+
         return chartOptions
     }
     useChart(chartRef, setChartData)
 
+    const tableData = ref([])
+    const loading = ref<boolean>(false)
+
+    const loadData = async () => {
+        loading.value = true
+        try {
+            let { data: { list, total } } = await revenueListAPi({ page: 1, pageSize: 10 })
+            list = list.map((item: any) => {
+                return {
+                    ...item,
+                    day: item.electricity + item.parkingFee + item.serviceFee + item.member
+                }
+            })
+            tableData.value = list
+            loading.value = false
+        } catch (e) {
+            console.log(e)
+        }
+    }
+    loadData()
 
 
 </script>

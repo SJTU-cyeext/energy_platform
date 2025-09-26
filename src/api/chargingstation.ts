@@ -5,7 +5,8 @@ const Api = {
     List: '/stationList',
     Edit: '/stationList/edit',
     Delete: '/stationList/delete',
-    Revenue: '/revenueChart'
+    Revenue: '/revenueChart',
+    RevenueList: '/revenueList'
 }
 
 interface ListType {
@@ -14,6 +15,12 @@ interface ListType {
     name?: string
     id?: number
     status: number
+}
+
+interface RevenueListType {
+    page: number,
+    pageSize: number,
+    name?: string
 }
 
 const listApi = (data: ListType) => {
@@ -28,8 +35,12 @@ const deleteApi = (id: string) => {
     return post(Api.Delete, { id })
 }
 
-const RevenueApi = () => {
+const revenueChartApi = () => {
     return get(Api.Revenue)
 }
 
-export { listApi, editApi, deleteApi, RevenueApi }
+const revenueListAPi = (data: RevenueListType) => {
+    return post(Api.RevenueList, data)
+}
+
+export { listApi, editApi, deleteApi, revenueChartApi, revenueListAPi }
