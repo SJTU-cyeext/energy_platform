@@ -45,7 +45,17 @@
                         <p class="fl ml" style="font-size: 12px; color: #999;">暂无预计</p>
                         <div class="fr">
                             <el-button size="small">维保记录</el-button>
-                            <el-button size="small" type="primary" class="mr">使用记录</el-button>
+                            <el-popover placement="right" :width="400" trigger="click">
+                                <template #reference>
+                                    <el-button size="small" type="primary" class="mr">使用记录</el-button>
+                                </template>
+                                <h3 class="mb">使用记录</h3>
+                                <el-timeline style="max-width: 600px">
+                                    <el-timeline-item v-for="rec in item.record" :key="rec.time" hollow type="primary" :timestamp="rec.time">
+                                        {{ rec.msg }}
+                                    </el-timeline-item>
+                                </el-timeline>
+                            </el-popover>
                         </div>
                     </div>
                 </div>
