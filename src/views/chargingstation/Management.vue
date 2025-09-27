@@ -5,19 +5,19 @@
         </el-select>
     </el-card>
     <el-card class="mt">
-        <el-radio-group size="large" v-model="radio">
-            <el-radio-button :label="`全部(${dataList.length})`" value="0" />
-            <el-radio-button :label="`空闲中(${checkCount(1)})`" value="1" />
-            <el-radio-button :label="`充电中(${checkCount(2)})`" value="2" />
-            <el-radio-button :label="`连接中(${checkCount(3)})`" value="3" />
-            <el-radio-button :label="`排队中(${checkCount(4)})`" value="4" />
-            <el-radio-button :label="`已预约(${checkCount(5)})`" value="5" />
-            <el-radio-button :label="`故障/离线(${checkCount(6)})`" value="6" />
+        <el-radio-group size="large" v-model="radio" @change="handleChange">
+            <el-radio-button :label="`全部(${dataList.length})`" :value="0" />
+            <el-radio-button :label="`空闲中(${checkCount(1)})`" :value="1" />
+            <el-radio-button :label="`充电中(${checkCount(2)})`" :value="2" />
+            <el-radio-button :label="`连接中(${checkCount(3)})`" :value="3" />
+            <el-radio-button :label="`排队中(${checkCount(4)})`" :value="4" />
+            <el-radio-button :label="`已预约(${checkCount(5)})`" :value="5" />
+            <el-radio-button :label="`故障/离线(${checkCount(6)})`" :value="6" />
         </el-radio-group>
     </el-card>
     <el-card class="mt">
         <el-row :gutter="20">
-            <el-col :span="6" v-for="item in dataList" :key="item.id">
+            <el-col :span="6" v-for="item in dataListCopy" :key="item.id">
                 <div class="item">
                     <div class="pic">
                         <p v-if="item.status === 1">空闲中</p>
@@ -68,11 +68,12 @@
 
     const value = ref<string>('')  // 默认显示第一条充电站的名称
 
-    const radio = ref<string>('0')  // 默认选择全部
+    const radio = ref<number>(0)  // 默认选择全部
 
     const options = ref<any>([])
 
-    const dataList = ref<any>([])
+    const dataList = ref<any>([])  // 服务端传来的原始数据
+    const dataListCopy = ref<any>([])  // 用于筛选与页面渲染的数据
 
     const loadData = async () => {  // 默认展示第一条数据
         try {
@@ -80,6 +81,7 @@
             options.value = data
             value.value = data[0].id
             dataList.value = data[0].list
+            dataListCopy.value = data[0].list
         } catch (e) {
             console.log(e)
         }
@@ -92,6 +94,12 @@
 
     const checkCount = (val: number) => {
         return dataList.value.filter((item: any) => item.status === val).length
+    }
+
+    const handleChange = () => {
+        if (radio.value != 0) {
+            dataListCopy.value = dataList.value.filter((item: any) => item.status === radio.value)
+        }
     }
 </script>
 
