@@ -64,7 +64,7 @@
 
     import { pileListApi } from '@/api/chargingstation';
     import { onMounted } from 'vue';
-    import { ref } from 'vue'
+    import { ref, watch } from 'vue'
 
     const value = ref<string>('')  // 默认显示第一条充电站的名称
 
@@ -97,10 +97,18 @@
     }
 
     const handleChange = () => {
+        dataListCopy.value = dataList.value // 每次更改将dataListCopy恢复至初始状态
         if (radio.value != 0) {
             dataListCopy.value = dataList.value.filter((item: any) => item.status === radio.value)
         }
     }
+
+    watch(value, () => {
+        const res = options.value.filter((item: any) => item.id === value.value)
+        dataList.value = res[0].list
+        dataListCopy.value = res[0].list
+    })
+
 </script>
 
 <style lang="less" scoped>
