@@ -6,9 +6,12 @@
 
 <script setup lang="ts">
     import AMapLoader from '@amap/amap-jsapi-loader';
-    import { onMounted } from 'vue';
+    import { onMounted, ref } from 'vue';
+    import { mapListApi } from '@/api/map';
+    import icon from '@/assets/flashIcon.png'
 
-    let map = null  // 初始化地图实例
+    let map: any = null  // 初始化地图实例
+    const markersData = ref<any>([])
 
     onMounted(() => {
         AMapLoader.load({
@@ -21,7 +24,20 @@
                 viewMode: "3D", // 是否为3D地图模式
                 zoom: 5, // 初始化地图缩放级别
                 center: [116.397428, 39.90923], // 初始化地图中心点位置
-            });
+            })
+            // 添加自定义标记
+            mapListApi().then(({ data }) => { // 解构赋值拿出res里的data
+                markersData.value = data
+                markersData.value.forEach((markerData: any) => {
+                    const marker = new AMap.Marker({
+                        position: markerData.position,
+                        icon: icon, //添加 icon 图标 URL
+                        // title: "北京",
+                    })
+                    map.add(marker)
+                })
+            })
+
         }).catch((e) => {
             console.log(e);
         });
