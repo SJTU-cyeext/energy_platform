@@ -16,8 +16,8 @@
                 <el-input placeholder="设备编号" v-model="searchParams.no"></el-input>
             </el-col>
             <el-col :span="6">
-                <el-button type="primary">查询</el-button>
-                <el-button>重置</el-button>
+                <el-button type="primary" @click="loadData">查询</el-button>
+                <el-button @click="handleReset">重置</el-button>
             </el-col>
             <el-col :span="6" class="mt">
                 <el-input placeholder="请输入站点名称" v-model="searchParams.name"></el-input>
@@ -33,7 +33,7 @@
         <el-button type="primary" icon="Download">导出订单数据到Excel</el-button>
     </el-card>
     <el-card class="mt">
-        <el-table>
+        <el-table :data="tableData" style="width: 100%;" v-loading="loading">
             <el-table-column label="订单号" prop="orderNo" />
             <el-table-column label="订单日期" prop="date" />
             <el-table-column label="开始时间" prop="startTime" />
@@ -48,13 +48,17 @@
                 </template>
             </el-table-column>
         </el-table>
+        <el-pagination class="fr mt mb" v-model:current-page="pageInfo.page" v-model:page-size="pageInfo.pageSize"
+            :page-sizes="[10, 20, 30, 40]" background layout="total, sizes, prev, pager, next, jumper" :total="totals"
+            @size-change="handleSizeChange" @current-change="handleCurrentChange" />
     </el-card>
 </template>
 
 <script setup lang="ts">
     import { ref } from 'vue'
+    import useSearchTable from '@/hooks/useSearchTable'
 
-    interface searchType {
+    interface SearchType {
         orderNo: string
         status: number
         no: string
@@ -63,9 +67,20 @@
         endDate: string
     }
 
+    interface RowType {
+        orderNo: string
+        date: string
+        startTime: string
+        endTime: string
+        equipmentNo: string
+        money: number
+        pay: string
+        status: number
+    }
+
     const date = ref()
 
-    const searchParams = ref<searchType>({
+    const searchParams = ref<SearchType>({
         orderNo: '',
         status: 1,
         no: '',
@@ -78,6 +93,32 @@
         searchParams.value.startDate = val[0]
         searchParams.value.endDate = val[1]
     }
+
+    const handleReset = () => {
+        searchParams.value = {
+            orderNo: '',
+            status: 1,
+            no: '',
+            name: '',
+            startDate: '',
+            endDate: ''
+        }
+        resetPagination()
+    }
+
+    // 一定不能传入searchParams.value
+    // 否则initialParams将指向普通js对象searchParams.value
+    // 后续无论如何修改searchParams，initial将始终指向第一次传入的值
+    const {
+        tableData,
+        loading,
+        loadData,
+        handleSizeChange,
+        handleCurrentChange,
+        resetPagination,
+        pageInfo,
+        totals
+    } = useSearchTable<RowType>('/orderList', searchParams)
 
 </script>
 
