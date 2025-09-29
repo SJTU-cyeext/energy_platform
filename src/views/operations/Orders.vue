@@ -29,7 +29,7 @@
         </el-row>
     </el-card>
     <el-card class="mt">
-        <el-button type="danger" :disabled="!selectionList.length">批量删除</el-button>
+        <el-button type="danger" :disabled="!selectionList.length" @click="handleBatchDelete">批量删除</el-button>
         <el-button type="primary" icon="Download" :disabled="!selectionList.length">导出订单数据到Excel</el-button>
     </el-card>
     <el-card class="mt">
@@ -65,6 +65,8 @@
 <script setup lang="ts">
     import { ref } from 'vue'
     import useSearchTable from '@/hooks/useSearchTable'
+    import { batchDeleteApi } from '@/api/operation'
+    import { ElMessage } from 'element-plus'
 
     interface SearchType {
         orderNo: string
@@ -131,6 +133,21 @@
     const selectionList = ref<RowType[]>([])
     const handleSelectionChange = (selection: RowType[]) => {
         selectionList.value = selection
+    }
+
+    const handleBatchDelete = async () => {
+        try {
+            const { code } = await batchDeleteApi(selectionList.value.map((item: RowType) => item.orderNo))
+            if (code === 200) {
+                ElMessage({
+                    message: "操作成功",
+                    type: "success"
+                })
+                loadData()
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
 </script>
 
