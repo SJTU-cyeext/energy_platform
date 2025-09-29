@@ -29,18 +29,26 @@
         </el-row>
     </el-card>
     <el-card class="mt">
-        <el-button type="danger">批量删除</el-button>
-        <el-button type="primary" icon="Download">导出订单数据到Excel</el-button>
+        <el-button type="danger" :disabled="!selectionList.length">批量删除</el-button>
+        <el-button type="primary" icon="Download" :disabled="!selectionList.length">导出订单数据到Excel</el-button>
     </el-card>
     <el-card class="mt">
-        <el-table :data="tableData" style="width: 100%;" v-loading="loading">
+        <el-table :data="tableData" style="width: 100%;" v-loading="loading" @selection-change="handleSelectionChange">
+            <el-table-column type="selection" />
+            <el-table-column label="序号" type="index" width="80" />
             <el-table-column label="订单号" prop="orderNo" />
             <el-table-column label="订单日期" prop="date" />
             <el-table-column label="开始时间" prop="startTime" />
             <el-table-column label="结束时间" prop="endTime" />
             <el-table-column label="金额" prop="money" />
             <el-table-column label="支付方式" prop="pay" />
-            <el-table-column label="订单状态" prop="status" />
+            <el-table-column label="订单状态" prop="status">
+                <template #default="scope">
+                    <el-tag type="success" v-if="scope.row.status === 2">进行中</el-tag>
+                    <el-tag type="primary" v-else-if="scope.row.status === 3">已完成</el-tag>
+                    <el-tag type="warning" v-else-if="scope.row.status === 4">异常</el-tag>
+                </template>
+            </el-table-column>
             <el-table-column label="操作">
                 <template #default="scope">
                     <el-button type="primary" size="small">详情</el-button>
@@ -120,6 +128,10 @@
         totals
     } = useSearchTable<RowType>('/orderList', searchParams)
 
+    const selectionList = ref<RowType[]>([])
+    const handleSelectionChange = (selection: RowType[]) => {
+        selectionList.value = selection
+    }
 </script>
 
 <style scoped></style>
